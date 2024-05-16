@@ -12,7 +12,7 @@ const Details = () => {
   const { mediaType, id } = useParams()
 
   const { data, loading } = useFetch(`/${mediaType}/${id}/videos`)
-  const { data: credits, loading: creditLoding } = useFetch(`/${mediaType}/${id}/credits`)
+  const { data: credits } = useFetch(`/${mediaType}/${id}/credits`)
 
   return (
     <>

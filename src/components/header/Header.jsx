@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import ContentWrapper from '../contentWrapper/ContentWrapper';
 import { HiOutlineSearch } from "react-icons/hi";
@@ -22,7 +22,7 @@ const Header = () => {
     window.scrollTo(0, 0)
   }, [location])
 
-  const controlNavbar = () => {
+  const controlNavbar = useCallback(() => {
     if (window.scrollY > 200) {
       if (window.scrollY > lastScrollY && !mobileMenu) {
         setShow("hide")
@@ -33,7 +33,7 @@ const Header = () => {
     } else {
       setShow("top")
     }
-  }
+  }, [lastScrollY, mobileMenu])
 
   useEffect(() => {
     window.addEventListener("scroll", controlNavbar)
@@ -41,7 +41,7 @@ const Header = () => {
     return () => {
       window.removeEventListener("scroll", controlNavbar)
     }
-  }, [lastScrollY])
+  }, [lastScrollY, controlNavbar])
 
   const openSearch = () => {
     setShowSearch(true)

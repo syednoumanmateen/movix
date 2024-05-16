@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ContentWrapper from '../../components/contentWrapper/ContentWrapper'
 import { fetchDataFromApi } from '../../utils/api'
 import './style.scss'
 
-import noResults from '../../assets/no-results.png'
 import { useParams } from 'react-router-dom'
 import Spinner from '../../components/spinner/Spinner'
 import MovieCard from '../../components/movieCard/MovieCard'
@@ -17,14 +16,14 @@ const Search = () => {
 
   const { query } = useParams()
 
-  const fetchInitialData = () => {
+  const fetchInitialData = useCallback(() => {
     setLoading(true)
     fetchDataFromApi(`/search/multi?query=${query}&page=${pageNum}`).then((res) => {
       setData(res)
       setPageNum(prev => prev + 1)
       setLoading(false)
     })
-  }
+  }, [query, pageNum])
 
   const fetchNextPageData = () => {
     setLoading(true)
@@ -43,7 +42,7 @@ const Search = () => {
   useEffect(() => {
     setPageNum(1)
     fetchInitialData()
-  }, [query])
+  }, [query, fetchInitialData])
 
   return (
     <>
@@ -58,7 +57,7 @@ const Search = () => {
                 </div>
                 <InfiniteScroll className='content' dataLength={data?.results?.length || []} next={fetchNextPageData} hasMore={pageNum <= data?.total_pages} loader={<Spinner />}>
                   {data?.results?.map((item, ind) => {
-                    if (item.mediaType === "person") return;
+                    if (item.mediaType === "person") return <></>;
                     return (
                       <MovieCard key={ind} data={item} fromSearch={true} />
                     )
